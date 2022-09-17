@@ -10,10 +10,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.btracker.databinding.ActivityMapsBinding
+import com.google.android.gms.maps.model.PolylineOptions
+import java.lang.System.currentTimeMillis
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private lateinit var mMap: GoogleMap
+    private lateinit var map: GoogleMap
     private lateinit var binding: ActivityMapsBinding
 
     private val locationProvider = LocationProvider(this)
@@ -30,7 +32,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -41,12 +42,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
+        map = googleMap
+        currentTimeMillis()
 
         locationProvider.liveLocation.observe(this) {
-            latLng -> mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+            latLng -> map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f))
         }
         permissionManager.requestUserLocation()
-        mMap.uiSettings.isZoomControlsEnabled = true
+        map.setMyLocationEnabled(true);
+        map.uiSettings.isZoomControlsEnabled = true
+        /*
+        val polyline1 = googleMap.addPolyline(
+            PolylineOptions()
+            .clickable(true)
+            .add(
+                LatLng(0.016, 143.321),
+                LatLng(69.747, 145.592),
+                LatLng(34.364, 100.891),
+                LatLng(-33.501, 50.217),
+                LatLng(-32.306, 49.248),
+                LatLng(-32.491, 147.309)))
+        polyline1.tag = "A"
+         */
     }
 }
