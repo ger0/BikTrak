@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">BTracker</string>
-    <string name="title_activity_maps">MapsActivity</string>
-    <string name="button_toggle_tracking">Toggle Tracking</string>
+    <string name="title_activity_maps">Tracker</string>
+    <string name="button_toggle_tracking_on">Rozpocznij</string>
+    <string name="button_toggle_tracking_off">Zakończ</string>
+    <string name="distance">Odległość: %d</string>
+    <string name="speed">Prędkość: %d</string>
+    <string name="duration">Czas: %d</string>
 </resources>

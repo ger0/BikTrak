@@ -35,7 +35,7 @@ data class Ui(
 class MapsFragment : Fragment() {
     private lateinit var map: GoogleMap
     private lateinit var locationProvider: LocationProvider
-    private var ui = MutableLiveData(Ui.EMPTY)
+    var ui = MutableLiveData(Ui.EMPTY)
 
     fun setProvider(provider: LocationProvider) {
         this.locationProvider = provider
@@ -45,9 +45,6 @@ class MapsFragment : Fragment() {
     private val callback = OnMapReadyCallback { googleMap ->
         this.map = googleMap
 
-        locationProvider.liveLocation.observe(this) {
-                latLng -> map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f))
-        }
         map.setMyLocationEnabled(true)
         map.uiSettings.isZoomControlsEnabled = true
 
@@ -56,13 +53,17 @@ class MapsFragment : Fragment() {
         }
     }
 
+    fun clearTrack() {
+        map.clear()
+    }
+
     @SuppressLint("MissingPermission")
     private fun updateUi(ui: Ui) {
         if (ui.position != null && ui.position != map.cameraPosition.target) {
             map.isMyLocationEnabled = true
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(ui.position, 14f))
+            drawRoute(ui.path)
         }
-        drawRoute(ui.path)
     }
 
     private fun drawRoute(path: List<LatLng>) {
@@ -90,6 +91,11 @@ class MapsFragment : Fragment() {
         locationProvider.liveLocation.observe(viewLifecycleOwner) { location ->
             val current = ui.value
             ui.value = current?.copy(position = location)
+        }
+        locationProvider.liveDistance.observe(viewLifecycleOwner) { distance ->
+            val current = ui.value
+            val formattedDist = getString(R.string.distance, distance)
+            ui.value = current?.copy(strDist = formattedDist)
         }
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?

@@ -16,8 +16,6 @@ class LocationProvider(private val activity: AppCompatActivity) {
     private val client
             by lazy { LocationServices.getFusedLocationProviderClient(activity) }
 
-    private var isTracking = false
-
     private val locations   = mutableListOf<LatLng>()
     private var distance    = 0
 
@@ -34,22 +32,12 @@ class LocationProvider(private val activity: AppCompatActivity) {
         }
     }
 
-    fun toggleTracking() {
-        // stop
-        if (isTracking) {
-            stopTracking()
-        } else {
-            trackUser()
-        }
-        isTracking = !isTracking
-    }
-
     @SuppressLint("MissingPermission")
     fun trackUser() {
         val locationRequest = LocationRequest.create()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        // 5 sekund interwał
-        locationRequest.interval = 5000
+        // 3 sekund interwał
+        locationRequest.interval = 3000
 
         client.requestLocationUpdates(locationRequest, locationCallback,
             Looper.getMainLooper())
