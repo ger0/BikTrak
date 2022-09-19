@@ -94,8 +94,13 @@ class MapsFragment : Fragment() {
         }
         locationProvider.liveDistance.observe(viewLifecycleOwner) { distance ->
             val current = ui.value
-            val formattedDist = getString(R.string.distance, distance)
-            ui.value = current?.copy(strDist = formattedDist)
+            val formatDist = getString(R.string.distance, distance)
+            ui.value = current?.copy(strDist = formatDist)
+        }
+        locationProvider.liveSpeed.observe(viewLifecycleOwner) { speed ->
+            val current = ui.value
+            val formatSpeed = getString(R.string.speed, speed)
+            ui.value = current?.copy(strSpeed = formatSpeed)
         }
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?

@@ -65,7 +65,8 @@ class MapsActivity : AppCompatActivity() {
             toggleTracking()
         }
         mapFragment.ui.observe(this) { ui ->
-            distanceText.text = ui.strDist
+            distanceText.text   = ui.strDist
+            speedText.text      = ui.strSpeed
         }
     }
 }

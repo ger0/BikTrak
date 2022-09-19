@@ -19,9 +19,10 @@ class LocationProvider(private val activity: AppCompatActivity) {
     private val locations   = mutableListOf<LatLng>()
     private var distance    = 0
 
-    val liveLocation = MutableLiveData<LatLng>()
-    val liveLocations = MutableLiveData<List<LatLng>>()
-    val liveDistance = MutableLiveData<Int>()
+    val liveLocation    = MutableLiveData<LatLng>()
+    val liveLocations   = MutableLiveData<List<LatLng>>()
+    val liveDistance    = MutableLiveData<Int>()
+    val liveSpeed       = MutableLiveData<Int>()
 
     @SuppressLint("MissingPermission")
     fun getUserLocation() {
@@ -61,7 +62,9 @@ class LocationProvider(private val activity: AppCompatActivity) {
                 liveDistance.value = distance
             }
             locations.add(latLng)
+            liveLocation.value  = latLng
             liveLocations.value = locations
+            liveSpeed.value     = currLoc.speed.toInt()
         }
     }
 }
