@@ -12,7 +12,14 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import kotlin.math.roundToInt
 
+
 class LocationProvider(private val activity: AppCompatActivity) {
+    // constants for periodic location updates
+    companion object {
+        const val PERIOD_BACKGROUND: Long  = 5000
+        const val PERIOD_FOREGROUND: Long  = 3000
+    }
+
     private val client
             by lazy { LocationServices.getFusedLocationProviderClient(activity) }
 
@@ -23,6 +30,7 @@ class LocationProvider(private val activity: AppCompatActivity) {
     val liveLocations   = MutableLiveData<List<LatLng>>()
     val liveDistance    = MutableLiveData<Int>()
     val liveSpeed       = MutableLiveData<Int>()
+    val liveBearing     = MutableLiveData<Float>()
 
     @SuppressLint("MissingPermission")
     fun getUserLocation() {
@@ -38,7 +46,7 @@ class LocationProvider(private val activity: AppCompatActivity) {
         val locationRequest = LocationRequest.create()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         // 3 sekund interwał
-        locationRequest.interval = 3000
+        locationRequest.interval = PERIOD_FOREGROUND
 
         client.requestLocationUpdates(locationRequest, locationCallback,
             Looper.getMainLooper())
@@ -65,6 +73,7 @@ class LocationProvider(private val activity: AppCompatActivity) {
             liveLocation.value  = latLng
             liveLocations.value = locations
             liveSpeed.value     = currLoc.speed.toInt()
+            liveBearing.value   = currLoc.bearing
         }
     }
 }

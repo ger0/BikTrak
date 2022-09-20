@@ -1,6 +1,8 @@
 package com.example.btracker
 
+import android.content.Context
 import android.graphics.Color
+import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
@@ -16,10 +18,11 @@ class MapsActivity : AppCompatActivity() {
     private lateinit var durationChrono  : Chronometer
     private lateinit var trackButton     : Button
 
-    private val locationProvider = LocationProvider(this)
-    private val permissionManager = PermissionsManager(this, locationProvider)
+    private val locationProvider    = LocationProvider(this)
+    private val permissionManager   = PermissionsManager(this, locationProvider)
 
-    private lateinit var mapFragment: MapsFragment
+    private lateinit var sensorManager  : SensorManager
+    private lateinit var mapFragment    : MapsFragment
 
     private fun toggleTracking() {
         // Stopping tracking
@@ -40,14 +43,15 @@ class MapsActivity : AppCompatActivity() {
             // start the timer
             durationChrono.base = SystemClock.elapsedRealtime()
             durationChrono.start()
+            mapFragment.clearTrack()
         }
-        mapFragment.clearTrack()
         isTracking = !isTracking
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         permissionManager.requestUserLocation()
 
         // figure out all elements displaying ui data
@@ -59,6 +63,7 @@ class MapsActivity : AppCompatActivity() {
         // setup map fragment
         mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment) as MapsFragment
         mapFragment.setProvider(locationProvider)
+        mapFragment.setSensorManager(sensorManager)
 
         // setup listeners
         trackButton.setOnClickListener {
