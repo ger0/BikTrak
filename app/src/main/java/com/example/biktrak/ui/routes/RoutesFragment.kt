@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.biktrak.databinding.FragmentRoutesBinding
 
 class RoutesFragment : Fragment() {
@@ -32,16 +33,20 @@ class RoutesFragment : Fragment() {
         routesViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }*/
-        setupRecyclerView(binding.textRoutes)
+        val recyclerView: RecyclerView = binding.recyclerViewRoutesFragment
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = CustomRecyclerAdapter(fillList())
         return root
+    }
+
+    private fun fillList(): List<String> {
+        val data = mutableListOf<String>()
+        (0..30).forEach { i -> data.add("$i element") }
+        return data
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun setupRecyclerView(recyclerView: TextView) {
-        recyclerView.adapter = MyAdapter(this, Route.route, tablet)
     }
 }
