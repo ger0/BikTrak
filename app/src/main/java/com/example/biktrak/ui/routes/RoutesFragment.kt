@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.biktrak.R
 import com.example.biktrak.databinding.FragmentRoutesBinding
 
 class RoutesFragment : Fragment() {
@@ -17,6 +18,12 @@ class RoutesFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private val adapter = RouteAdapter()
+    private val imageIdList = listOf(R.drawable.route1,
+        R.drawable.route2,
+        R.drawable.route3)
+    private var index = 0
+    var rnds = (10..50).random()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,20 +40,33 @@ class RoutesFragment : Fragment() {
         routesViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }*/
-        val recyclerView: RecyclerView = binding.recyclerViewRoutesFragment
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = CustomRecyclerAdapter(fillList())
+
+        init()
         return root
     }
 
-    private fun fillList(): List<String> {
+    /*private fun fillList(): List<String> {
         val data = mutableListOf<String>()
         (0..30).forEach { i -> data.add("$i element") }
         return data
-    }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun init() {
+        binding.apply {
+            recyclerViewRoutesFragment.layoutManager = LinearLayoutManager(context)
+            recyclerViewRoutesFragment.adapter = adapter
+
+            addButton.setOnClickListener {
+                if (index > 2) index = 0
+                val route = Route(imageIdList[index], "Route $index","$rnds, km")
+                adapter.addRoute(route)
+                index++
+            }
+        }
     }
 }
