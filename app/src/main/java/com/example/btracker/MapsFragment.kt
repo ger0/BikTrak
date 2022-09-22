@@ -28,17 +28,17 @@ import android.graphics.Bitmap as Bitmap
 
 // current data to be drawn
 data class Ui(
-    val strSpeed: String,
-    val strDist : String,
+    val speed   : Int,
+    val distance: Long,
     val position: LatLng?,
     val bearing : Float,
-    val path    : List<LatLng>,
+    val path    : List<LatLng>
     //val bitmap  : Bitmap?
 ) {
     companion object {
         val EMPTY = Ui(
-            strSpeed    = "",
-            strDist     = "",
+            speed       = 0,
+            distance    = 0L,
             position    = null,
             bearing     = 0f,
             path        = emptyList()
@@ -74,7 +74,7 @@ class MapsFragment : Fragment(), SensorEventListener {
     private val callback = OnMapReadyCallback { googleMap ->
         this.map = googleMap
 
-        map.setMyLocationEnabled(true)
+        map.isMyLocationEnabled = true
         map.uiSettings.isZoomControlsEnabled = true
 
         ui.observe(this) { ui ->
@@ -91,6 +91,7 @@ class MapsFragment : Fragment(), SensorEventListener {
     }
 
     // take a picture and return it
+    @SuppressLint("MissingPermission")
     fun takePolygonSnapshot() {
         val data = ui.value
         if (data == null) {
@@ -98,6 +99,7 @@ class MapsFragment : Fragment(), SensorEventListener {
         } // else
 
         // prepare the map for drawing
+        map.isMyLocationEnabled = false
         val boundsBuilder = LatLngBounds.builder()
         for (it in data.path) {
             boundsBuilder.include(it)
@@ -150,6 +152,7 @@ class MapsFragment : Fragment(), SensorEventListener {
         super.onViewCreated(view, savedInstanceState)
 
         tiltSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
+
         // observers
         locationProvider.liveLocations.observe(viewLifecycleOwner) { locations ->
             val current = ui.value
@@ -161,13 +164,11 @@ class MapsFragment : Fragment(), SensorEventListener {
         }
         locationProvider.liveDistance.observe(viewLifecycleOwner) { distance ->
             val current = ui.value
-            val formatDist = getString(R.string.distance, distance)
-            ui.value = current?.copy(strDist = formatDist)
+            ui.value = current?.copy(distance = distance)
         }
         locationProvider.liveSpeed.observe(viewLifecycleOwner) { speed ->
             val current = ui.value
-            val formatSpeed = getString(R.string.speed, speed)
-            ui.value = current?.copy(strSpeed = formatSpeed)
+            ui.value = current?.copy(speed = speed)
         }
         locationProvider.liveBearing.observe(viewLifecycleOwner) { bearing ->
             val current = ui.value

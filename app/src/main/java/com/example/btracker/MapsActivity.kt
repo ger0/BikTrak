@@ -3,15 +3,23 @@ package com.example.btracker
 import android.content.Context
 import android.graphics.Color
 import android.hardware.SensorManager
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.widget.Button
 import android.widget.Chronometer
 import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import com.example.btracker.DB.TrackDB
+import com.example.btracker.DB.TrackData
+import com.example.btracker.DB.UserDB
+import java.time.LocalDate
 
 class MapsActivity : AppCompatActivity() {
     private var isTracking = false
+    private val trackDB = TrackDB(this)
+    private val userDB  = UserDB(this)
 
     private lateinit var speedText       : TextView
     private lateinit var distanceText    : TextView
@@ -24,25 +32,64 @@ class MapsActivity : AppCompatActivity() {
     private lateinit var sensorManager  : SensorManager
     private lateinit var mapFragment    : MapsFragment
 
+    // scrap the data from the locationProvider
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun scrapTrackData(): TrackData? {
+        val ui = mapFragment.ui.value ?: return null
+        return TrackData(
+            date        = LocalDate.now(),
+            description = "",
+            duration    = getTimerTime(),
+            distance    = ui.distance,
+            speed       = (ui.distance / getTimerTime()).toFloat()
+        )
+    }
+
+    // chronometer functions ----
+    private var timerTime = Long.MIN_VALUE
+    private fun startTimer() {
+        durationChrono.base = SystemClock.elapsedRealtime()
+        durationChrono.start()
+        timerTime = Long.MIN_VALUE
+    }
+    private fun stopTimer() {
+        durationChrono.stop()
+        timerTime = SystemClock.elapsedRealtime() - durationChrono.base
+    }
+    private fun getTimerTime(): Long {
+        return if (timerTime == Long.MIN_VALUE) {
+            SystemClock.elapsedRealtime() - durationChrono.base
+        } else timerTime
+    }
+    // -------------------------
+
+    // handles starting and stopping tracking functionality
     private fun toggleTracking() {
         // Stopping tracking
         if (isTracking) {
+            stopTimer()
+            // wymagania
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val trackData = scrapTrackData()
+                if (trackData != null) {
+                    trackDB.addTrack(trackData)
+                }
+            }
+            mapFragment.takePolygonSnapshot()
             locationProvider.stopTracking()
             trackButton.text = getString(R.string.button_toggle_tracking_on)
             trackButton.setTextColor(Color.GREEN)
 
             // stop the timer
-            durationChrono.stop()
         }
         // Starting to track
         else {
+            startTimer()
             locationProvider.trackUser()
             trackButton.text = getString(R.string.button_toggle_tracking_off)
             trackButton.setTextColor(Color.RED)
 
             // start the timer
-            durationChrono.base = SystemClock.elapsedRealtime()
-            durationChrono.start()
             mapFragment.clearTrack()
         }
         isTracking = !isTracking
@@ -70,8 +117,8 @@ class MapsActivity : AppCompatActivity() {
             toggleTracking()
         }
         mapFragment.ui.observe(this) { ui ->
-            distanceText.text   = ui.strDist
-            speedText.text      = ui.strSpeed
+            distanceText.text   = getString(R.string.distance, ui.distance)
+            speedText.text      = getString(R.string.speed, ui.speed)
         }
     }
 }

@@ -11,6 +11,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 
 class LocationProvider(private val activity: AppCompatActivity) {
@@ -24,11 +25,11 @@ class LocationProvider(private val activity: AppCompatActivity) {
             by lazy { LocationServices.getFusedLocationProviderClient(activity) }
 
     private val locations   = mutableListOf<LatLng>()
-    private var distance    = 0
+    private var distance    = 0L
 
     val liveLocation    = MutableLiveData<LatLng>()
     val liveLocations   = MutableLiveData<List<LatLng>>()
-    val liveDistance    = MutableLiveData<Int>()
+    val liveDistance    = MutableLiveData<Long>()
     val liveSpeed       = MutableLiveData<Int>()
     val liveBearing     = MutableLiveData<Float>()
 
@@ -69,7 +70,7 @@ class LocationProvider(private val activity: AppCompatActivity) {
 
             val lastLoc = locations.lastOrNull()
             if (lastLoc != null) {
-                distance += SphericalUtil.computeDistanceBetween(lastLoc, latLng).roundToInt()
+                distance += SphericalUtil.computeDistanceBetween(lastLoc, latLng).roundToLong()
                 liveDistance.value = distance
             }
             locations.add(latLng)
