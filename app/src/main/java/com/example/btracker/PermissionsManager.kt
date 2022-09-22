@@ -17,5 +17,6 @@ class PermissionsManager(
 
     fun requestUserLocation() {
         locationPermissionProvider.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        locationPermissionProvider.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
     }
 }

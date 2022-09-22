@@ -40,6 +40,9 @@ class LocationProvider(private val activity: AppCompatActivity) {
             liveLocation.value = latLng
         }
     }
+    fun getRawUserLocation(): LatLng {
+        return locations.last()
+    }
 
     @SuppressLint("MissingPermission")
     fun trackUser() {

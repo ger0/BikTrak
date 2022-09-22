@@ -3,7 +3,7 @@
     <string name="title_activity_maps">Tracker</string>
     <string name="button_toggle_tracking_on">Rozpocznij</string>
     <string name="button_toggle_tracking_off">Zakończ</string>
-    <string name="distance">Odległość: %d</string>
-    <string name="speed">Prędkość: %d</string>
+    <string name="distance">Odległość: %d metrów</string>
+    <string name="speed">Prędkość: %d m/s</string>
     <string name="duration">Czas: %d</string>
 </resources>

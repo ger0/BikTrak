@@ -11,16 +11,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.createBitmap
 import androidx.lifecycle.MutableLiveData
 import com.example.btracker.LocationProvider.Companion.PERIOD_BACKGROUND
 import com.google.android.gms.maps.*
 
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
+import java.io.File
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import android.graphics.Bitmap as Bitmap
 
 // current data to be drawn
 data class Ui(
@@ -29,6 +33,7 @@ data class Ui(
     val position: LatLng?,
     val bearing : Float,
     val path    : List<LatLng>,
+    //val bitmap  : Bitmap?
 ) {
     companion object {
         val EMPTY = Ui(
@@ -36,7 +41,8 @@ data class Ui(
             strDist     = "",
             position    = null,
             bearing     = 0f,
-            path        = emptyList(),
+            path        = emptyList()
+            //bitmap      = null
         )
     }
 }
@@ -78,6 +84,37 @@ class MapsFragment : Fragment(), SensorEventListener {
 
     fun clearTrack() {
         map.clear()
+
+        // thumbnail bitmap removal
+        //val current = ui.value
+        //ui.value = current?.copy(bitmap = null)
+    }
+
+    // take a picture and return it
+    fun takePolygonSnapshot() {
+        val data = ui.value
+        if (data == null) {
+            return
+        } // else
+
+        // prepare the map for drawing
+        val boundsBuilder = LatLngBounds.builder()
+        for (it in data.path) {
+            boundsBuilder.include(it)
+        }
+        val bounds = boundsBuilder.build()
+        map.setLatLngBoundsForCameraTarget(bounds)
+
+        // czy naprawde nie mozna tego zrobic lepiej?
+        map.snapshot{ it ->
+            /*
+            if (it != null) {
+                val smallbmp = Bitmap.createScaledBitmap(it, 96, 96)
+                ui.value = data?.copy(bitmap = smallbmp)
+            }
+             */
+            //ui.value = data?.copy(bitmap = it)
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -159,6 +196,7 @@ class MapsFragment : Fragment(), SensorEventListener {
             while (!isActive) {
                 Thread.sleep(PERIOD_BACKGROUND)
                 locationProvider.getUserLocation()
+                //println(locationProvider.getRawUserLocation().toString())
             }
         }.start()
     }

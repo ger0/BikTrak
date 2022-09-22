@@ -13,10 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BTracker" >
-
         <!--
-             TODO: Before you run your application, you need a Google Maps API key.
-
              To get one, follow the directions here:
 
                 https://developers.google.com/maps/documentation/android-sdk/get-api-key
