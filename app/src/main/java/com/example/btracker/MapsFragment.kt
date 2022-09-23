@@ -5,14 +5,17 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.createBitmap
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
+import com.example.btracker.DB.ImageData
+import com.example.btracker.DB.DatabaseHelper
 import com.example.btracker.LocationProvider.Companion.PERIOD_BACKGROUND
 import com.google.android.gms.maps.*
 
@@ -20,11 +23,8 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
-import java.io.File
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
-import android.graphics.Bitmap as Bitmap
 
 // current data to be drawn
 data class Ui(
@@ -33,7 +33,6 @@ data class Ui(
     val position: LatLng?,
     val bearing : Float,
     val path    : List<LatLng>
-    //val bitmap  : Bitmap?
 ) {
     companion object {
         val EMPTY = Ui(
@@ -42,7 +41,6 @@ data class Ui(
             position    = null,
             bearing     = 0f,
             path        = emptyList()
-            //bitmap      = null
         )
     }
 }
@@ -84,15 +82,12 @@ class MapsFragment : Fragment(), SensorEventListener {
 
     fun clearTrack() {
         map.clear()
-
-        // thumbnail bitmap removal
-        //val current = ui.value
-        //ui.value = current?.copy(bitmap = null)
     }
 
-    // take a picture and return it
+    // take a picture and return it | ugly
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingPermission")
-    fun takePolygonSnapshot() {
+    fun writePolygonSnapshot(database: DatabaseHelper, image: ImageData) {
         val data = ui.value
         if (data == null) {
             return
@@ -108,14 +103,11 @@ class MapsFragment : Fragment(), SensorEventListener {
         map.setLatLngBoundsForCameraTarget(bounds)
 
         // czy naprawde nie mozna tego zrobic lepiej?
-        map.snapshot{ it ->
-            /*
-            if (it != null) {
-                val smallbmp = Bitmap.createScaledBitmap(it, 96, 96)
-                ui.value = data?.copy(bitmap = smallbmp)
-            }
-             */
-            //ui.value = data?.copy(bitmap = it)
+        map.snapshot{ bitmap ->
+            image.bitmap = bitmap!!
+            database.addImage(image)
+            database.allImages
+            println("HELLO!")
         }
     }
 
@@ -197,7 +189,6 @@ class MapsFragment : Fragment(), SensorEventListener {
             while (!isActive) {
                 Thread.sleep(PERIOD_BACKGROUND)
                 locationProvider.getUserLocation()
-                //println(locationProvider.getRawUserLocation().toString())
             }
         }.start()
     }

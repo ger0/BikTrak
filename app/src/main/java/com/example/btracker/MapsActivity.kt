@@ -11,15 +11,12 @@ import android.widget.Chronometer
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.example.btracker.DB.TrackDB
-import com.example.btracker.DB.TrackData
-import com.example.btracker.DB.UserDB
+import com.example.btracker.DB.*
 import java.time.LocalDate
 
 class MapsActivity : AppCompatActivity() {
     private var isTracking = false
-    private val trackDB = TrackDB(this)
-    private val userDB  = UserDB(this)
+    private val trackDB     = DatabaseHelper(this)
 
     private lateinit var speedText       : TextView
     private lateinit var distanceText    : TextView
@@ -73,9 +70,13 @@ class MapsActivity : AppCompatActivity() {
                 val trackData = scrapTrackData()
                 if (trackData != null) {
                     trackDB.addTrack(trackData)
+                    val img = ImageData(
+                        refId = trackData.id!!,
+                        type = ImageData.THUMBNAIL
+                    )
+                    mapFragment.writePolygonSnapshot(trackDB, img)
                 }
             }
-            mapFragment.takePolygonSnapshot()
             locationProvider.stopTracking()
             trackButton.text = getString(R.string.button_toggle_tracking_on)
             trackButton.setTextColor(Color.GREEN)
