@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
         val usernameLogin = binding.usernameLogin
         val password = binding.password
         val signInButton = binding.signInButton
-        val loading = binding.loading
+        //val loading = binding.loading
         val img = binding.imageAuthorizeIcon
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
@@ -57,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-            loading.visibility = View.GONE
+            //loading.visibility = View.GONE
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
             }
@@ -97,7 +97,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             signInButton.setOnClickListener {
-                loading.visibility = View.VISIBLE
+                //loading.visibility = View.VISIBLE
                 loginViewModel.login(usernameLogin.text.toString(), password.text.toString())
 
                 //animacja,ale nie działająca
