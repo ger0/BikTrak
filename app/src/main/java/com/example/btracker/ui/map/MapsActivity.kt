@@ -1,4 +1,4 @@
-package com.example.btracker
+package com.example.btracker.ui.map
 
 import android.content.Context
 import android.graphics.Color
@@ -12,6 +12,10 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.btracker.DB.*
+import com.example.btracker.LocationProvider
+import com.example.btracker.MapsFragment
+import com.example.btracker.PermissionsManager
+import com.example.btracker.R
 import java.time.LocalDate
 
 class MapsActivity : AppCompatActivity() {

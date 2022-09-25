@@ -6,7 +6,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class UserDB(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,
+class UserDB(context: Context?): SQLiteOpenHelper(context, DATABASE_NAME,
     null, DATABASE_VER
 ) {
     companion object {
