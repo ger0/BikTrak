@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginTop="10dp"
-        android:text="Please, authorize!"
+        android:text="@string/authorize_text"
         android:textAlignment="center"
         android:textColor="@android:color/darker_gray"
         android:textSize="25sp"

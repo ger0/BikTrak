@@ -1,20 +1,23 @@
 package com.example.btracker
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Looper
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
+import com.example.btracker.ui.map.MapViewModel
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
-import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 
-class LocationProvider(private val activity: AppCompatActivity) {
+class LocationProvider(
+    private val context: Context,
+    private val viewModel: MapViewModel?
+    ) {
     // constants for periodic location updates
     companion object {
         const val PERIOD_BACKGROUND: Long  = 5000
@@ -22,7 +25,7 @@ class LocationProvider(private val activity: AppCompatActivity) {
     }
 
     private val client
-            by lazy { LocationServices.getFusedLocationProviderClient(activity) }
+            by lazy { LocationServices.getFusedLocationProviderClient(context) }
 
     private val locations   = mutableListOf<LatLng>()
     private var distance    = 0L
@@ -81,6 +84,12 @@ class LocationProvider(private val activity: AppCompatActivity) {
             liveLocations.value = locations
             liveSpeed.value     = currLoc.speed.toInt()
             liveBearing.value   = currLoc.bearing
+
+            viewModel!!.speed.value    = currLoc.speed.toInt()
+            viewModel!!.distance.value = distance
+            viewModel!!.position.value = latLng
+            viewModel!!.bearing.value  = currLoc.bearing
+            viewModel!!.path.value     = locations
         }
     }
 }

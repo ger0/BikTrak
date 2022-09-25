@@ -1,8 +1,16 @@
 package com.example.btracker
 
+import android.content.Context
+import android.graphics.Color
+import android.hardware.SensorManager
+import android.os.Build
 import android.os.Bundle
-import android.view.Menu
-import com.google.android.material.snackbar.Snackbar
+import android.os.SystemClock
+import android.widget.Button
+import android.widget.Chronometer
+import android.widget.TextView
+import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -11,12 +19,32 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import com.example.btracker.DB.DatabaseHelper
+import com.example.btracker.DB.ImageData
+import com.example.btracker.DB.TrackData
 import com.example.btracker.databinding.ActivityMainBinding
+import com.example.btracker.ui.map.MapViewModel
+import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+
+    private val mapViewModel: MapViewModel by viewModels()
+
+    lateinit private var locationProvider:  LocationProvider
+    lateinit private var permissionManager: PermissionsManager
+    private var database = DatabaseHelper(this)
+
+    private lateinit var sensorManager  : SensorManager
+    //private lateinit var mapFragment    : MapFrag
+
+    // wartosci dla karty mapy
+    private lateinit var durationChrono : Chronometer
+    private lateinit var trackButton  : Button
+    private lateinit var speedText    : TextView
+    private lateinit var distanceText : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,12 +52,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // permissions
+        locationProvider    = LocationProvider(this, mapViewModel)
+        permissionManager   = PermissionsManager(this, locationProvider)
+
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        permissionManager.requestUserLocation()
+
         setSupportActionBar(binding.appBarMain.toolbar)
-/*
-        binding.appBarMain.addButton.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }*/
+
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -42,11 +73,100 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-    }
 
+        // Observers
+        durationChrono = findViewById<Chronometer>(R.id.dur)
+        trackButton  = findViewById<Button>(R.id.trackButt)
+        speedText    = findViewById<TextView>(R.id.spd)
+        distanceText = findViewById<TextView>(R.id.dist)
+
+        trackButton.setOnClickListener {
+            toggleTracking(mapViewModel.isTracking.value!!)
+        }
+        mapViewModel.speed.observe(this, Observer { speed ->
+           speedText.text = getString(R.string.speed, speed)
+        })
+        mapViewModel.distance.observe(this, Observer { distance ->
+            distanceText.text = getString(R.string.distance, distance)
+        })
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+    // scrap the data from the locationProvider
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun scrapTrackData(): TrackData {
+        return TrackData(
+            date        = LocalDate.now(),
+            description = "",
+            duration    = getTimerTime(),
+            distance    = mapViewModel.distance.value!!,
+            speed       = (mapViewModel.distance.value!! / getTimerTime()).toFloat()
+        )
+    }
+    // handles starting and stopping tracking functionality
+    private fun toggleTracking(isTracking: Boolean) {
+        // swap tracking mode
+        mapViewModel.isTracking.value = !mapViewModel.isTracking.value!!
+        // Stopping tracking
+        if (isTracking) {
+            locationProvider.stopTracking()
+            // stop the timer
+            stopTimer()
+            // wymagania
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val trackData = scrapTrackData()
+                database.addTrack(trackData)
+
+                val imgData = ImageData(
+                    refId = trackData.id!!,
+                    type = ImageData.THUMBNAIL
+                )
+
+                // we want the map fragment to take snapshot of the image
+                mapViewModel.shouldSnapshot.value = true
+                // this observer will get removed once the image gets retrieved
+                mapViewModel.savedSnapshot.observe(this, Observer{ shouldRetrieve ->
+                    if (shouldRetrieve) {
+                        val bitmap = mapViewModel.retrieveSnapshot(this)
+                        if (bitmap != null) {
+                            imgData.bitmap = bitmap
+                            database.addImage(imgData)
+                        }
+                    }
+                })
+            }
+            locationProvider.clearData()
+            trackButton.text = getString(R.string.button_toggle_tracking_on)
+            trackButton.setTextColor(Color.GREEN)
+        }
+        // Starting to track
+        else {
+            startTimer()
+            locationProvider.trackUser()
+            trackButton.text = getString(R.string.button_toggle_tracking_off)
+            trackButton.setTextColor(Color.RED)
+        }
+    }
+
+    // chronometer functions ----
+    private var timerTime = Long.MIN_VALUE
+    private fun startTimer() {
+        durationChrono.base = SystemClock.elapsedRealtime()
+        durationChrono.start()
+        timerTime = Long.MIN_VALUE
+    }
+    private fun stopTimer() {
+        durationChrono.stop()
+        timerTime = SystemClock.elapsedRealtime() - durationChrono.base
+    }
+    private fun getTimerTime(): Long {
+        return if (timerTime == Long.MIN_VALUE) {
+            SystemClock.elapsedRealtime() - durationChrono.base
+        } else timerTime
+    }
+    // -------------------------
 }

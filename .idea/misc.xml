@@ -11,10 +11,17 @@
         <entry key="app/src/main/res/layout-w1240dp/fragment_map.xml" value="0.1" />
         <entry key="app/src/main/res/layout-w936dp/app_bar_main.xml" value="0.146484375" />
         <entry key="app/src/main/res/layout-w936dp/fragment_map.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.4813863928112965" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.3765625" />
+        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.25" />
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.1953125" />
-        <entry key="app/src/main/res/layout/fragment_map.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/content_main.xml" value="0.3765625" />
+        <entry key="app/src/main/res/layout/fragment_map.xml" value="0.2752808988764045" />
+        <entry key="app/src/main/res/layout/fragment_map2.xml" value="0.18425925925925926" />
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.2875" />
+        <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.3765625" />
+        <entry key="app/src/main/res/menu-large/activity_main_drawer.xml" value="0.25" />
+        <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.25" />
       </map>
     </option>
   </component>

@@ -1,4 +1,4 @@
-package com.example.btracker
+package com.example.btracker.ui.map
 
 import android.annotation.SuppressLint
 import android.hardware.Sensor
@@ -16,7 +16,9 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.example.btracker.DB.ImageData
 import com.example.btracker.DB.DatabaseHelper
+import com.example.btracker.LocationProvider
 import com.example.btracker.LocationProvider.Companion.PERIOD_BACKGROUND
+import com.example.btracker.R
 import com.google.android.gms.maps.*
 
 import com.google.android.gms.maps.model.CameraPosition

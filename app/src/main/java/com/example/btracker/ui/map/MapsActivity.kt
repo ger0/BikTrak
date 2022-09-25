@@ -13,7 +13,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.btracker.DB.*
 import com.example.btracker.LocationProvider
-import com.example.btracker.MapsFragment
 import com.example.btracker.PermissionsManager
 import com.example.btracker.R
 import java.time.LocalDate
@@ -27,7 +26,7 @@ class MapsActivity : AppCompatActivity() {
     private lateinit var durationChrono  : Chronometer
     private lateinit var trackButton     : Button
 
-    private val locationProvider    = LocationProvider(this)
+    private val locationProvider    = LocationProvider(this, null)
     private val permissionManager   = PermissionsManager(this, locationProvider)
 
     private lateinit var sensorManager  : SensorManager

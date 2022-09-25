@@ -14,7 +14,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
-import com.example.btracker.DB.UserDB
 import com.example.btracker.MainActivity
 import com.example.btracker.databinding.ActivityLoginBinding
 
@@ -36,8 +35,8 @@ class LoginActivity : AppCompatActivity() {
         //val loading = binding.loading
         val img = binding.imageAuthorizeIcon
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
+        loginViewModel = ViewModelProvider(this,
+            LoginViewModelFactory())[LoginViewModel::class.java]
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
@@ -101,11 +100,10 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.login(usernameLogin.text.toString(), password.text.toString(), applicationContext)
 
                 // animacja,ale nie działająca
-                /*
+
                 val animator = ObjectAnimator.ofFloat(img, View.ROTATION,  0f,360f)
                 animator.duration = 500
                 animator.start()
-                 */
 
                 intentThis()
             }
