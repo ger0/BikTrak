@@ -64,6 +64,8 @@ class MapsActivity : AppCompatActivity() {
     private fun toggleTracking() {
         // Stopping tracking
         if (isTracking) {
+            locationProvider.stopTracking()
+            // stop the timer
             stopTimer()
             // wymagania
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -77,11 +79,10 @@ class MapsActivity : AppCompatActivity() {
                     mapFragment.writePolygonSnapshot(trackDB, img)
                 }
             }
-            locationProvider.stopTracking()
+            locationProvider.clearData()
             trackButton.text = getString(R.string.button_toggle_tracking_on)
             trackButton.setTextColor(Color.GREEN)
 
-            // stop the timer
         }
         // Starting to track
         else {

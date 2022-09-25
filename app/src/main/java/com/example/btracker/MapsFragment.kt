@@ -101,13 +101,13 @@ class MapsFragment : Fragment(), SensorEventListener {
         }
         val bounds = boundsBuilder.build()
         map.setLatLngBoundsForCameraTarget(bounds)
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 1))
 
         // czy naprawde nie mozna tego zrobic lepiej?
         map.snapshot{ bitmap ->
             image.bitmap = bitmap!!
             database.addImage(image)
             database.allImages
-            println("HELLO!")
         }
     }
 

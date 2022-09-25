@@ -58,6 +58,9 @@ class LocationProvider(private val activity: AppCompatActivity) {
 
     fun stopTracking() {
         client.removeLocationUpdates(locationCallback)
+    }
+
+    fun clearData() {
         locations.clear()
         distance = 0
     }
