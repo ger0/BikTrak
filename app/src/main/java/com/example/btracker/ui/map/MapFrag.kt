@@ -6,19 +6,14 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import com.example.btracker.DB.DatabaseHelper
-import com.example.btracker.DB.ImageData
 import com.example.btracker.R
 import com.google.android.gms.maps.*
 
@@ -31,8 +26,8 @@ import kotlin.properties.Delegates
 class MapFrag : Fragment(), SensorEventListener {
     private var isTracking by Delegates.notNull<Boolean>()
     private var position   : LatLng?        = null
-    private var path       : List<LatLng>?  = null
-    private var bearing    : Float          = 45f
+    private var path       : MutableList<LatLng>?  = null
+    private var bearing    : Float          = 0f
 
     private var tiltSensor : Sensor? = null
     private var optTilted   = true
@@ -44,8 +39,8 @@ class MapFrag : Fragment(), SensorEventListener {
 
     var ui = MutableLiveData(Ui.EMPTY)
 
-    var cameraZoom = 14f
-    var cameraTilt = 0f
+    private var cameraZoom = 14f
+    private var cameraTilt = 0f
 
     // callback
     @SuppressLint("MissingPermission")
@@ -56,22 +51,21 @@ class MapFrag : Fragment(), SensorEventListener {
         map.uiSettings.isZoomControlsEnabled = true
 
         // Observers
-        viewModel.position.observe(viewLifecycleOwner, Observer { position ->
+        viewModel.position.observe(viewLifecycleOwner) { position ->
             this.position = position
-            updateUi()
-        })
-        viewModel.isTracking.observe(viewLifecycleOwner, Observer { isTracking ->
+        }
+        viewModel.isTracking.observe(viewLifecycleOwner) { isTracking ->
             this.isTracking = isTracking
             if (isTracking) {
                 map.clear()
             }
-        })
-        viewModel.bearing.observe(viewLifecycleOwner, Observer { bearing ->
+        }
+        viewModel.bearing.observe(viewLifecycleOwner) { bearing ->
             this.bearing = bearing
-        })
-        viewModel.path.observe(viewLifecycleOwner, Observer { path ->
-            this.path = path
-        })
+        }
+        viewModel.path.observe(viewLifecycleOwner) { path ->
+            updateUi(path)
+        }
         viewModel.shouldSnapshot.observe(viewLifecycleOwner) { shouldSnapshot ->
             if (shouldSnapshot) {
                 writePolygonSnapshot()
@@ -99,7 +93,7 @@ class MapFrag : Fragment(), SensorEventListener {
         val bounds = boundsBuilder.build()
         map.setLatLngBoundsForCameraTarget(bounds)
         map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 1))
-        // take snapshot and save it to a variable in the viewmodel
+        // take snapshot and save it to a variable in the view model
         map.snapshot{ bitmap ->
             viewModel.saveSnapshot(bitmap)
         }
@@ -108,7 +102,7 @@ class MapFrag : Fragment(), SensorEventListener {
 
     // update camera position
     @SuppressLint("MissingPermission")
-    private fun updateUi() {
+    private fun updateUi(path: List<LatLng>) {
         if (position != null && position != map.cameraPosition.target) {
             cameraZoom = map.cameraPosition.zoom
             val tilt = if (optTilted) cameraTilt else 0f
@@ -117,8 +111,8 @@ class MapFrag : Fragment(), SensorEventListener {
             map.isMyLocationEnabled = true
             map.animateCamera(CameraUpdateFactory.newCameraPosition(update))
 
-            if (isTracking && path != null) {
-                drawRoute(path!!)
+            if (isTracking) {
+                drawRoute(path)
             }
         }
     }
