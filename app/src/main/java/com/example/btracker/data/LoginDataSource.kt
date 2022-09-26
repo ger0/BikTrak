@@ -19,7 +19,8 @@ class LoginDataSource {
                 return Result.Success(user)
             } else {
                 userDB.addUser(UserData(username, password))
-                throw(Throwable())
+                val user = LoggedInUser(java.util.UUID.randomUUID().toString(), username)
+                return Result.Success(user)
             }
             val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), "Jane Doe")
             return Result.Success(fakeUser)

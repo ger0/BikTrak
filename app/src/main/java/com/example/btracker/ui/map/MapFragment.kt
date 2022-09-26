@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.btracker.databinding.FragmentMapBinding
 
+//TODO: przeniesc stuff z mainactivity // wyglada na to ze to nie bedzie takie proste
 class MapFragment : Fragment() {
 
     private var _binding: FragmentMapBinding? = null

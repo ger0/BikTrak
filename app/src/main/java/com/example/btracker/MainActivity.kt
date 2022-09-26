@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+    private var isActive: Boolean = true
+
     private val mapViewModel: MapViewModel by viewModels()
 
     lateinit private var locationProvider:  LocationProvider
@@ -38,7 +40,6 @@ class MainActivity : AppCompatActivity() {
     private var database = DatabaseHelper(this)
 
     private lateinit var sensorManager  : SensorManager
-    //private lateinit var mapFragment    : MapFrag
 
     // wartosci dla karty mapy
     private lateinit var durationChrono : Chronometer
@@ -53,10 +54,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // permissions
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         locationProvider    = LocationProvider(this, mapViewModel)
         permissionManager   = PermissionsManager(this, locationProvider)
-
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         permissionManager.requestUserLocation()
 
         setSupportActionBar(binding.appBarMain.toolbar)
@@ -80,6 +80,10 @@ class MainActivity : AppCompatActivity() {
         speedText    = findViewById<TextView>(R.id.spd)
         distanceText = findViewById<TextView>(R.id.dist)
 
+        if (mapViewModel.isTracking.value == true) {
+            trackButton.text = getString(R.string.button_toggle_tracking_off)
+            trackButton.setTextColor(Color.RED)
+        }
         trackButton.setOnClickListener {
             toggleTracking(mapViewModel.isTracking.value!!)
         }
@@ -96,15 +100,16 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    // ------------------------------------- Default activity -------------------------------------------
     // scrap the data from the locationProvider
     @RequiresApi(Build.VERSION_CODES.O)
     private fun scrapTrackData(): TrackData {
         return TrackData(
             date        = LocalDate.now(),
             description = "",
-            duration    = getTimerTime(),
+            duration    = timerTime,
             distance    = mapViewModel.distance.value!!,
-            speed       = (mapViewModel.distance.value!! / getTimerTime()).toFloat()
+            speed       = (mapViewModel.distance.value!! / timerTime).toFloat()
         )
     }
     // handles starting and stopping tracking functionality
@@ -141,7 +146,7 @@ class MainActivity : AppCompatActivity() {
             }
             locationProvider.clearData()
             trackButton.text = getString(R.string.button_toggle_tracking_on)
-            trackButton.setTextColor(Color.GREEN)
+            trackButton.setTextColor(Color.BLACK)
         }
         // Starting to track
         else {
@@ -154,19 +159,35 @@ class MainActivity : AppCompatActivity() {
 
     // chronometer functions ----
     private var timerTime = Long.MIN_VALUE
-    private fun startTimer() {
-        durationChrono.base = SystemClock.elapsedRealtime()
+    private fun startTimer(isResumed: Boolean = false) {
+        val offset = if (isResumed) mapViewModel.lastTime else 0L
+        durationChrono.base = SystemClock.elapsedRealtime() + offset
         durationChrono.start()
-        timerTime = Long.MIN_VALUE
+        //timerTime = Long.MIN_VALUE + offset
     }
     private fun stopTimer() {
+        mapViewModel.lastTime = durationChrono.base - SystemClock.elapsedRealtime()
         durationChrono.stop()
-        timerTime = SystemClock.elapsedRealtime() - durationChrono.base
-    }
-    private fun getTimerTime(): Long {
-        return if (timerTime == Long.MIN_VALUE) {
-            SystemClock.elapsedRealtime() - durationChrono.base
-        } else timerTime
+        timerTime = durationChrono.base - SystemClock.elapsedRealtime()
     }
     // -------------------------
+
+    override fun onStart() {
+        super.onStart()
+        isActive = true
+        if (mapViewModel.isTracking.value == true) {
+            startTimer(isResumed = true)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopTimer()
+        Thread {
+            while (!isActive) {
+                Thread.sleep(LocationProvider.PERIOD_BACKGROUND)
+                locationProvider.getUserLocation()
+            }
+        }.start()
+    }
 }

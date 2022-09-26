@@ -9,6 +9,7 @@ class MapViewModel : ViewModel() {
         value = "This is home Fragment"
     }
     val text: LiveData<String> = _text
+    var lastTime    : Long = 0L
 
     // should the map fragment take a snapshot?
     val shouldSnapshot  = MutableLiveData<Boolean>(false)

@@ -21,7 +21,7 @@ class UserDB(context: Context?): SQLiteOpenHelper(context, DATABASE_NAME,
 
     override fun onCreate(db: SQLiteDatabase?) {
         val CREATE_TABLE_QUERY =
-            ("CREATE TABLE $TABLE_NAME ($COL_LOGIN STRING PRIMARY KEY, $COL_PASSWD STRING)")
+            ("CREATE TABLE $TABLE_NAME ($COL_LOGIN STRING PRIMARY KEY AUTOINCREMENT, $COL_PASSWD STRING)")
         db!!.execSQL(CREATE_TABLE_QUERY)
     }
 

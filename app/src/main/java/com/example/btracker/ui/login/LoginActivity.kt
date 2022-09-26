@@ -61,6 +61,7 @@ class LoginActivity : AppCompatActivity() {
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
+                intentThis()
             }
             setResult(Activity.RESULT_OK)
 
@@ -105,7 +106,6 @@ class LoginActivity : AppCompatActivity() {
                 animator.duration = 500
                 animator.start()
 
-                intentThis()
             }
         }
     }

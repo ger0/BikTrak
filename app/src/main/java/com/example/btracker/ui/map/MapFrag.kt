@@ -25,13 +25,14 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.properties.Delegates
 
 // current data to be drawn
 class MapFrag : Fragment(), SensorEventListener {
-    private var isTracking = false
+    private var isTracking by Delegates.notNull<Boolean>()
     private var position   : LatLng?        = null
     private var path       : List<LatLng>?  = null
-    private var bearing    : Float          = 0f
+    private var bearing    : Float          = 45f
 
     private var tiltSensor : Sensor? = null
     private var optTilted   = true
@@ -80,7 +81,9 @@ class MapFrag : Fragment(), SensorEventListener {
     }
 
     private fun clearTrack() {
-        map.clear()
+        if (this::map.isInitialized) {
+            map.clear()
+        }
     }
 
     // take a picture and return it | ugly
@@ -107,12 +110,12 @@ class MapFrag : Fragment(), SensorEventListener {
     @SuppressLint("MissingPermission")
     private fun updateUi() {
         if (position != null && position != map.cameraPosition.target) {
+            cameraZoom = map.cameraPosition.zoom
             val tilt = if (optTilted) cameraTilt else 0f
             val update  = CameraPosition(position!!, cameraZoom, tilt, bearing)
 
             map.isMyLocationEnabled = true
             map.animateCamera(CameraUpdateFactory.newCameraPosition(update))
-            cameraZoom = map.cameraPosition.zoom
 
             if (isTracking && path != null) {
                 drawRoute(path!!)
@@ -146,6 +149,7 @@ class MapFrag : Fragment(), SensorEventListener {
 
         sensorManager = activity?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         tiltSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
+        isTracking = viewModel.isTracking.value!!
     }
 
     // wodotryski
@@ -156,6 +160,18 @@ class MapFrag : Fragment(), SensorEventListener {
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-        TODO("Not yet implemented")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // 0.5 sec sampling
+        sensorManager.registerListener(this, tiltSensor, 500000)
+        clearTrack()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        sensorManager.unregisterListener(this)
+        clearTrack()
     }
 }
