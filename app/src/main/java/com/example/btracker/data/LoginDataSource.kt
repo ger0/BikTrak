@@ -19,11 +19,8 @@ class LoginDataSource {
                 return Result.Success(user)
             } else {
                 userDB.addUser(UserData(username, password))
-                val user = LoggedInUser(java.util.UUID.randomUUID().toString(), username)
-                return Result.Success(user)
+                return Result.Error(IOException("Zarejestrowano, spróbuj ponownie"))
             }
-            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), "Jane Doe")
-            return Result.Success(fakeUser)
         } catch (e: Throwable) {
             return Result.Error(IOException("Error logging in", e))
         }

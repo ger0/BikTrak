@@ -5,6 +5,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.os.Build
+import androidx.annotation.RequiresApi
 
 class UserDB(context: Context?): SQLiteOpenHelper(context, DATABASE_NAME,
     null, DATABASE_VER
@@ -19,9 +21,10 @@ class UserDB(context: Context?): SQLiteOpenHelper(context, DATABASE_NAME,
         private val COL_PASSWD  = "Password"
     }
 
+    @SuppressLint("SQLiteString")
     override fun onCreate(db: SQLiteDatabase?) {
         val CREATE_TABLE_QUERY =
-            ("CREATE TABLE $TABLE_NAME ($COL_LOGIN STRING PRIMARY KEY AUTOINCREMENT, $COL_PASSWD STRING)")
+            ("CREATE TABLE $TABLE_NAME ($COL_LOGIN STRING PRIMARY KEY, $COL_PASSWD STRING)")
         db!!.execSQL(CREATE_TABLE_QUERY)
     }
 
@@ -41,6 +44,27 @@ class UserDB(context: Context?): SQLiteOpenHelper(context, DATABASE_NAME,
         db.close()
     }
 
+    val allUserData: ArrayList<UserData>
+        @SuppressLint("Range") @RequiresApi(Build.VERSION_CODES.O)
+        get() {
+            val userList = ArrayList<UserData>()
+            val selectQuery = "SELECT * FROM $TABLE_NAME"
+            val db = this.writableDatabase
+            val cursor = db.rawQuery(selectQuery, null)
+            if (cursor.moveToFirst()) {
+                do {
+                    val user = UserData(
+                        login = cursor.getString(cursor.getColumnIndex(COL_LOGIN)),
+                        password = cursor.getString(cursor.getColumnIndex(COL_PASSWD))
+                    )
+                    userList.add(user)
+                } while (cursor.moveToNext())
+                cursor.close()
+                db.close()
+            }
+            return userList
+        }
+
     @SuppressLint("Range")
     fun checkUser(login: String, password: String): Boolean {
         val selectQuery = "SELECT * FROM $TABLE_NAME WHERE $COL_LOGIN = '$login'"
@@ -51,6 +75,7 @@ class UserDB(context: Context?): SQLiteOpenHelper(context, DATABASE_NAME,
                 return true
             }
         }
+        cursor.close()
         return false
     }
 }

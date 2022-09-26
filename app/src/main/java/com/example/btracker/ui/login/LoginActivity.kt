@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.os.Handler
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
@@ -98,14 +99,19 @@ class LoginActivity : AppCompatActivity() {
 
             signInButton.setOnClickListener {
                 //loading.visibility = View.VISIBLE
-                loginViewModel.login(usernameLogin.text.toString(), password.text.toString(), applicationContext)
-
-                // animacja,ale nie działająca
 
                 val animator = ObjectAnimator.ofFloat(img, View.ROTATION,  0f,360f)
                 animator.duration = 500
                 animator.start()
 
+                val handler = Handler()
+                handler.postDelayed({
+                    loginViewModel.login(
+                        usernameLogin.text.toString(),
+                        password.text.toString(),
+                        applicationContext
+                    )
+                }, 500)
             }
         }
     }

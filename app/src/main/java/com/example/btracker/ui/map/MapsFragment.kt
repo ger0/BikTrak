@@ -59,8 +59,8 @@ class MapsFragment : Fragment(), SensorEventListener {
 
     var ui = MutableLiveData(Ui.EMPTY)
 
-    var cameraZoom = 14f
-    var cameraTilt = 0f
+    private var cameraZoom = 14f
+    private var cameraTilt = 0f
 
     fun setProvider(provider: LocationProvider) {
         this.locationProvider = provider
@@ -90,10 +90,8 @@ class MapsFragment : Fragment(), SensorEventListener {
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingPermission")
     fun writePolygonSnapshot(database: DatabaseHelper, image: ImageData) {
-        val data = ui.value
-        if (data == null) {
-            return
-        } // else
+        val data = ui.value ?: return
+        // else
 
         // prepare the map for drawing
         map.isMyLocationEnabled = false
