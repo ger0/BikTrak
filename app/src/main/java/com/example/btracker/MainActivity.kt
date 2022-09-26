@@ -18,14 +18,18 @@ import com.example.btracker.DB.DatabaseHelper
 import com.example.btracker.DB.ImageData
 import com.example.btracker.databinding.ActivityMainBinding
 import com.example.btracker.ui.map.MapViewModel
+import com.example.btracker.ui.routes.RoutesViewModel
 
 class MainActivity : AppCompatActivity() {
+    private var username: String = ""
+
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
     private var isActive: Boolean = true
 
     private val mapViewModel: MapViewModel by viewModels()
+    private val routeViewModel: RoutesViewModel by viewModels()
 
     private lateinit var locationProvider:  LocationProvider
     private lateinit var permissionManager: PermissionsManager
@@ -36,6 +40,11 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // assign username
+        if (intent.extras?.containsKey("username") == true) {
+            username = intent.getStringExtra("username").toString()
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -80,7 +89,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        //stopTimer()
+        isActive = false
         Thread {
             while (!isActive) {
                 Thread.sleep(LocationProvider.PERIOD_BACKGROUND)
@@ -93,11 +102,16 @@ class MainActivity : AppCompatActivity() {
     // handles starting and stopping tracking functionality
     @RequiresApi(Build.VERSION_CODES.O)
     private fun toggleTracking(isTracking: Boolean) {
+        // Starting to track
+        if (isTracking) {
+            locationProvider.trackUser()
+        }
         // Stopping tracking
-        if (!isTracking) {
+        else if (!isTracking) {
             locationProvider.stopTracking()
+
             // check if theres data available
-            val trackData = mapViewModel.scrapTrackData() ?: return
+            val trackData = mapViewModel.scrapTrackData(username = username) ?: return
             database.addTrack(trackData)
 
             val imgData = ImageData(
@@ -105,10 +119,10 @@ class MainActivity : AppCompatActivity() {
                 type = ImageData.THUMBNAIL
             )
 
-            // we want the map fragment to take snapshot of the image
+            /* we want the map fragment to take snapshot of the track       *
+            *  receive the image and append it to the image database        *
+            *  the observer will get removed once the image gets retrieved  */
             mapViewModel.shouldSnapshot.value = true
-            // receive the image and append it to the image database
-            // this observer will get removed once the image gets retrieved
             mapViewModel.savedSnapshot.observe(this) { shouldRetrieve ->
                 if (shouldRetrieve) {
                     val bitmap = mapViewModel.retrieveSnapshot(this)
@@ -118,14 +132,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            // clean up
-            mapViewModel.resetTrackData()
-            locationProvider.clearData()
         }
-        // Starting to track
-        else {
-            mapViewModel.resetTrackData()
-            locationProvider.trackUser()
-        }
+        mapViewModel.resetTrackData()
+        locationProvider.clearData()
     }
 }

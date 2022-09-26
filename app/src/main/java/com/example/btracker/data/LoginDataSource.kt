@@ -19,10 +19,10 @@ class LoginDataSource {
                 return Result.Success(user)
             } else {
                 userDB.addUser(UserData(username, password))
-                return Result.Error(IOException("Zarejestrowano, spróbuj ponownie"))
+                return Result.Error(IOException("Zarejestrowano"))
             }
         } catch (e: Throwable) {
-            return Result.Error(IOException("Error logging in", e))
+            return Result.Error(IOException("Spróbuj ponownie", e))
         }
     }
 

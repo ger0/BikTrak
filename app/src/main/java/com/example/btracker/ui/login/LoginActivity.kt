@@ -19,6 +19,7 @@ import com.example.btracker.MainActivity
 import com.example.btracker.databinding.ActivityLoginBinding
 
 import com.example.btracker.R
+import com.example.btracker.data.model.LoggedInUser
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var loginViewModel: LoginViewModel
@@ -118,6 +119,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun intentThis(){
         val intent = Intent(this, MainActivity::class.java)
+        val username: String = loginViewModel.loginResult.value!!.success!!.displayName
+        intent.putExtra("username", username)
         startActivity(intent)
     }
 

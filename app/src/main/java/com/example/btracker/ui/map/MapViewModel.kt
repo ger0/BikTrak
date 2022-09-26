@@ -39,15 +39,15 @@ class MapViewModel : ViewModel() {
     }
     // scrap the data from the locationProvider
     @RequiresApi(Build.VERSION_CODES.O)
-    fun scrapTrackData(): TrackData? {
+    fun scrapTrackData(username: String): TrackData? {
         val duration = this.lastTime
-        var track: TrackData?
+        val track: TrackData?
         if (distance.value == null) {
             track = null
         } else {
             track = TrackData(
                 date = LocalDate.now(),
-                description = "",
+                description = username,
                 duration = duration,
                 distance = distance.value!!,
                 speed = if (duration > 0f) (distance.value!! / duration).toFloat() else 0f
