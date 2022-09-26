@@ -31,10 +31,7 @@ class LocationProvider(
     private var distance    = 0L
 
     val liveLocation    = MutableLiveData<LatLng>()
-    val liveLocations   = MutableLiveData<List<LatLng>>()
     val liveDistance    = MutableLiveData<Long>()
-    val liveSpeed       = MutableLiveData<Int>()
-    val liveBearing     = MutableLiveData<Float>()
 
     @SuppressLint("MissingPermission")
     fun getUserLocation() {
@@ -44,10 +41,6 @@ class LocationProvider(
             liveLocation.value = latLng
         }
     }
-    fun getRawUserLocation(): LatLng {
-        return locations.last()
-    }
-
     @SuppressLint("MissingPermission")
     fun trackUser() {
         val locationRequest = LocationRequest.create()
@@ -81,15 +74,12 @@ class LocationProvider(
             }
             locations.add(latLng)
             liveLocation.value  = latLng
-            liveLocations.value = locations
-            liveSpeed.value     = currLoc.speed.toInt()
-            liveBearing.value   = currLoc.bearing
 
-            viewModel!!.speed.value    = currLoc.speed.toInt()
-            viewModel!!.distance.value = distance
-            viewModel!!.position.value = latLng
-            viewModel!!.bearing.value  = currLoc.bearing
-            viewModel!!.path.value     = locations
+            viewModel!!.speed.value  = currLoc.speed.toInt()
+            viewModel.distance.value = distance
+            viewModel.position.value = latLng
+            viewModel.bearing.value  = currLoc.bearing
+            viewModel.path.value     = locations
         }
     }
 }

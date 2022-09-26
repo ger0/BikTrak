@@ -37,8 +37,6 @@ class MapFrag : Fragment(), SensorEventListener {
 
     private val viewModel: MapViewModel by activityViewModels()
 
-    var ui = MutableLiveData(Ui.EMPTY)
-
     private var cameraZoom = 14f
     private var cameraTilt = 0f
 
