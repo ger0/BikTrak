@@ -121,4 +121,7 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="map_inclination">Map inclination</string>
+    <string name="map_rotation">Map rotation</string>
+    <string name="turn_on_the_night_theme_in_low_light">Turn on the night theme in low light</string>
 </resources>

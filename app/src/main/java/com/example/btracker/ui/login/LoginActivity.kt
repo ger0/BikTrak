@@ -11,6 +11,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -96,6 +97,31 @@ class LoginActivity : AppCompatActivity() {
                 }
                 false
             }
+
+            signInButton.setOnKeyListener(object : View.OnKeyListener {
+                override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
+                    if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                        signInButton.clearFocus()
+                        signInButton.isCursorVisible = false
+
+                        val animator = ObjectAnimator.ofFloat(img, View.ROTATION,  0f,360f)
+                        animator.duration = 500
+                        animator.start()
+
+                        val handler = Handler()
+                        handler.postDelayed({
+                            loginViewModel.login(
+                                usernameLogin.text.toString(),
+                                password.text.toString(),
+                                applicationContext
+                            )
+                        }, 500)
+
+                        return true
+                    }
+                    return false
+                }
+            })
 
             signInButton.setOnClickListener {
                 //loading.visibility = View.VISIBLE

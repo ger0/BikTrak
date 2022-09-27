@@ -6,25 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".ui.settings.SettingsFragment">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <CheckBox
+            android:id="@+id/change_theme"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/text_settings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-        </LinearLayout>
-    </ScrollView>
+            android:gravity="start|top"
+            android:onClick="onCheckboxClicked"
+            android:text="@string/turn_on_the_night_theme_in_low_light"
+            android:textSize="26sp" />
 
+        <CheckBox
+            android:id="@+id/map_rotation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+
+            android:gravity="start|top"
+            android:onClick="onCheckboxClicked"
+            android:text="@string/map_rotation"
+            android:textSize="26sp" />
+
+        <CheckBox
+            android:id="@+id/map_inclination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+
+            android:gravity="start|top"
+            android:onClick="onCheckboxClicked"
+            android:text="@string/map_inclination"
+            android:textSize="26sp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
