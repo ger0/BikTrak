@@ -132,6 +132,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+            mapViewModel.initialised = false
         }
         mapViewModel.resetTrackData()
         locationProvider.clearData()

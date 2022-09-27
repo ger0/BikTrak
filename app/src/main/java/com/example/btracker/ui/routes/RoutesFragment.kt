@@ -1,17 +1,20 @@
 package com.example.btracker.ui.routes
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.btracker.DB.DatabaseHelper
 import com.example.btracker.R
 import com.example.btracker.databinding.FragmentRoutesBinding
 
 class RoutesFragment : Fragment() {
-
+    private lateinit var database: DatabaseHelper
     private var _binding: FragmentRoutesBinding? = null
 
     // This property is only valid between onCreateView and
@@ -24,6 +27,7 @@ class RoutesFragment : Fragment() {
     private var index = 0
     var rnds = (10..50).random()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,6 +44,7 @@ class RoutesFragment : Fragment() {
             textView.text = it
         }*/
 
+        database = DatabaseHelper(requireContext())
         init()
         return root
     }
@@ -55,17 +60,27 @@ class RoutesFragment : Fragment() {
         _binding = null
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun init() {
         binding.apply {
             recyclerViewRoutesFragment.layoutManager = LinearLayoutManager(context)
             recyclerViewRoutesFragment.adapter = adapter
-
+            /*
             addButton.setOnClickListener {
                 if (index > 2) index = 0
                 val route = Route(imageIdList[index], "Route $index","$rnds, km")
                 adapter.addRoute(route)
                 index++
             }
+             */
+        }
+        val tracks = database.allTracks
+        val images = database.allImages
+        for(item in tracks) {
+            val image = images.find{ it.refId == item.id }
+            val route = Route(image!!.bitmap, item.description, item.distance.toString())
+            adapter.addRoute(route)
+            index++
         }
     }
 }

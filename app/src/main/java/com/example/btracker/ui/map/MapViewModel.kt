@@ -29,13 +29,13 @@ class MapViewModel : ViewModel() {
     fun saveSnapshot(bitmap: Bitmap?) {
         this.bitmap.value = bitmap
         this.savedSnapshot.value = true
+        this.shouldSnapshot.value = false
     }
 
     fun retrieveSnapshot(owner: LifecycleOwner): Bitmap? {
-        this.shouldSnapshot.value   = false
-        this.savedSnapshot.value    = false
         savedSnapshot.removeObservers(owner)
-        return bitmap.value
+        this.savedSnapshot.value    = false
+        return this.bitmap.value
     }
     // scrap the data from the locationProvider
     @RequiresApi(Build.VERSION_CODES.O)
@@ -56,7 +56,6 @@ class MapViewModel : ViewModel() {
         return track
     }
     fun resetTrackData() {
-        initialised         = false
         speed.value         = 0
         distance.value      = 0
         if (path.value != null) {

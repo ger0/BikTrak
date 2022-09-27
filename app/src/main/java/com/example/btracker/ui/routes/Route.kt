@@ -1,3 +1,5 @@
 package com.example.btracker.ui.routes
 
-data class Route(val imageId: Int, val name: String, val data: String)
+import android.graphics.Bitmap
+
+data class Route(val bitmap: Bitmap, val name: String, val data: String)

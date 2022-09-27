@@ -13,7 +13,8 @@ class RouteAdapter: RecyclerView.Adapter<RouteAdapter.RouteHolder>(){
     class RouteHolder(item: View): RecyclerView.ViewHolder(item) {
         val binding = RouteItemBinding.bind(item)
         fun bind(route: Route) = with(binding){
-            routeImage.setImageResource(route.imageId)
+            //routeImage.setImageResource(route.imageId)
+            routeImage.setImageBitmap(route.bitmap)
             routeName.text = route.name
             routeData.text = route.data
         }

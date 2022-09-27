@@ -62,12 +62,12 @@ class MapFrag : Fragment(), SensorEventListener {
             this.bearing = bearing
         }
         viewModel.path.observe(viewLifecycleOwner) { path ->
+            this.path = path
             updateUi(path)
         }
         viewModel.shouldSnapshot.observe(viewLifecycleOwner) { shouldSnapshot ->
             if (shouldSnapshot) {
                 writePolygonSnapshot()
-                viewModel.shouldSnapshot.value = false
             }
         }
     }
