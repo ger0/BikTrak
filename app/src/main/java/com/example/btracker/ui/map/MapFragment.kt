@@ -98,7 +98,7 @@ class MapFragment : Fragment() {
     private fun stopTimer() {
         mapViewModel.lastTime = durationChrono.base - SystemClock.elapsedRealtime()
         durationChrono.stop()
-        timerTime = durationChrono.base - SystemClock.elapsedRealtime()
+        timerTime = SystemClock.elapsedRealtime() - durationChrono.base
     }
     // -------------------------
 

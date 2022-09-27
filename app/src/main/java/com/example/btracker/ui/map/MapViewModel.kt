@@ -45,12 +45,14 @@ class MapViewModel : ViewModel() {
         if (distance.value == null) {
             track = null
         } else {
+            // in seconds instead of milliseconds
+            val calcDuration = duration / 1000
             track = TrackData(
                 date = LocalDate.now(),
                 description = username,
-                duration = duration,
+                duration = calcDuration,
                 distance = distance.value!!,
-                speed = if (duration > 0f) (distance.value!! / duration).toFloat() else 0f
+                speed = if (calcDuration > 0f) (distance.value!! / calcDuration).toFloat() else 0f
             )
         }
         return track

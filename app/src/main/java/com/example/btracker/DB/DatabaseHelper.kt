@@ -33,7 +33,6 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,
         private const val IMAGE_TYPE      = "Type"
         private const val IMAGE_DATA      = "Data"
     }
-    private var currId = 1
 
     override fun onCreate(db: SQLiteDatabase) {
         val CREATE_TRACK =
@@ -105,18 +104,16 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,
         val db      = this.writableDatabase
         val values  = ContentValues()
 
-        track.id = currId
-
-        values.put(TRACK_ID, currId)
         values.put(TRACK_DATE, track.date.toString())
         values.put(TRACK_DESC, track.description)
         values.put(TRACK_DIST, track.distance)
         values.put(TRACK_DUR, track.duration)
         values.put(TRACK_SPEED, track.speed)
 
-        db.insert(TRACK_TABLE, null, values)
+        val id = db.insert(TRACK_TABLE, null, values)
         db.close()
-        currId++
+
+        track.id = id.toInt()
     }
 
     fun addImage(imageData: ImageData) {
