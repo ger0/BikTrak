@@ -25,12 +25,14 @@
                 android:id="@+id/routeImage"
                 android:layout_width="51dp"
                 android:layout_height="45dp"
-                app:srcCompat="@drawable/route1" />
+                app:srcCompat="@drawable/route1"
+                tools:ignore="ImageContrastCheck" />
 
             <TextView
-                android:id="@+id/routeName"
+                android:id="@+id/routeDate"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:text="TextView"
@@ -39,16 +41,30 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/routeData"
+                android:id="@+id/routeDistance"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="3dp"
                 android:gravity="center"
                 android:text="TextView"
                 android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/routeDuration"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="text"
+                android:textAlignment="textEnd"
+                android:textAllCaps="false"
+                android:textDirection="locale"
+                android:textStyle="italic" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

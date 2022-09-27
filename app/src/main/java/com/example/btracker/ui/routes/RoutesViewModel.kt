@@ -13,6 +13,6 @@ class RoutesViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 
-    val trackList = MutableLiveData<List<TrackData>>()
-    val imageList = MutableLiveData<List<ImageData>>()
+    //val trackList = MutableLiveData<List<TrackData>>()
+    //val imageList = MutableLiveData<List<ImageData>>()
 }

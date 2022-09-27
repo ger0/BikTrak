@@ -25,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:visibility="gone"
             app:backgroundTint="@color/purple_200"
             app:layout_constraintBottom_toBottomOf="@+id/recyclerViewRoutesFragment"
             app:layout_constraintEnd_toEndOf="@+id/recyclerViewRoutesFragment"
@@ -32,5 +33,6 @@
             app:layout_constraintStart_toStartOf="@+id/recyclerViewRoutesFragment"
             app:layout_constraintTop_toTopOf="@+id/recyclerViewRoutesFragment"
             app:layout_constraintVertical_bias="0.98"
-            app:srcCompat="@drawable/add_icon" />
+            app:srcCompat="@drawable/add_icon"
+            tools:ignore="SpeakableTextPresentCheck" />
 </androidx.constraintlayout.widget.ConstraintLayout>

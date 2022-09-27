@@ -3,54 +3,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="3dp"
-        app:cardCornerRadius="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/routeImage"
-                android:layout_width="81dp"
-                android:layout_height="81dp"
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
                 app:srcCompat="@drawable/route1"
                 tools:ignore="ImageContrastCheck" />
 
             <TextView
                 android:id="@+id/routeDate"
-                android:layout_width="520dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:text="TextView"
                 android:textColor="@color/black"
-                android:textSize="34sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/routeDistance"
-                android:layout_width="520dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="3dp"
-                android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:text="TextView"
                 android:textColor="@color/black"
-                android:textSize="34sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/routeDuration"
@@ -59,16 +51,14 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="3dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:gravity="right"
                 android:text="text"
                 android:textAlignment="textEnd"
                 android:textAllCaps="false"
                 android:textDirection="locale"
-                android:textSize="28sp"
                 android:textStyle="italic" />
-
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
