@@ -9,16 +9,20 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.btracker.DB.DatabaseHelper
 import com.example.btracker.R
 import com.example.btracker.databinding.FragmentRoutesBinding
+import com.example.btracker.ui.map.MapViewModel
 import java.time.format.DateTimeFormatter
 
 class RoutesFragment : Fragment() {
     private lateinit var database: DatabaseHelper
     private var _binding: FragmentRoutesBinding? = null
+
+    private val viewModel: RoutesViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -36,27 +40,13 @@ class RoutesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val routesViewModel =
-            ViewModelProvider(this)[RoutesViewModel::class.java]
-
         _binding = FragmentRoutesBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        /*val textView: TextView = binding.textRoutes
-        routesViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }*/
 
         database = DatabaseHelper(requireContext())
         init()
         return root
     }
-
-    /*private fun fillList(): List<String> {
-        val data = mutableListOf<String>()
-        (0..30).forEach { i -> data.add("$i element") }
-        return data
-    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -68,16 +58,7 @@ class RoutesFragment : Fragment() {
         binding.apply {
             recyclerViewRoutesFragment.layoutManager = LinearLayoutManager(context)
             recyclerViewRoutesFragment.adapter = adapter
-            /*
-            addButton.setOnClickListener {
-                if (index > 2) index = 0
-                val route = Route(imageIdList[index], "Route $index","$rnds, km")
-                adapter.addRoute(route)
-                index++
-            }
-             */
         }
-        // lazy
 
         val dateFormatter = DateTimeFormatter.ofPattern("dd LLL yyyy")
 
@@ -91,7 +72,8 @@ class RoutesFragment : Fragment() {
                 date = item.date.format(dateFormatter),
                 distance = readableDistance(item.distance),
                 duration = secondsToString(item.duration),
-                averageSpeed = speedToKms(item.speed)
+                averageSpeed = speedToKms(item.speed),
+                username = item.username
             )
             adapter.addRoute(route)
             index++
@@ -114,7 +96,9 @@ class RoutesFragment : Fragment() {
         val seconds = "%02d".format(rawSeconds % 60)
         return "$hours$minutes:$seconds"
     }
+
     private fun displayRouteDialog(route: Route) {
+        viewModel.route = route
         RouteDialogFragment().show(childFragmentManager, "What")
     }
 }

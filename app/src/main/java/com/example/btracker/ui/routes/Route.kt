@@ -7,5 +7,6 @@ data class Route(
     val date: String,
     val duration: String,
     val distance: String,
-    val averageSpeed: String
+    val averageSpeed: String,
+    val username: String
     )

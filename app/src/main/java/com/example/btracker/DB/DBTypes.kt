@@ -9,7 +9,7 @@ import java.io.ByteArrayOutputStream
 data class TrackData(
     var id: Int?    = null,
     var date        : LocalDate,    // date of a ride
-    var description : String,       // a comment made by user (optional)
+    var username    : String,       // a comment made by user (optional)
     var duration    : Long,         // total duration
     var distance    : Long,         // total distance in meters
     var speed       : Float         // average speed throughout the track

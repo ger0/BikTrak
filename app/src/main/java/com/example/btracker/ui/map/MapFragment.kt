@@ -1,6 +1,8 @@
 package com.example.btracker.ui.map
 
+import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -9,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Chronometer
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.btracker.R
@@ -45,13 +48,15 @@ class MapFragment : Fragment() {
         return root
     }
 
+    @SuppressLint("ResourceType", "NewApi")
     private fun changeButtonText() {
         if (mapViewModel.isTracking.value == true) {
             trackButton.text = getString(R.string.button_toggle_tracking_off)
             trackButton.setTextColor(Color.RED)
         } else {
             trackButton.text = getString(R.string.button_toggle_tracking_on)
-            trackButton.setTextColor(Color.BLACK)
+            //trackButton.setTextColor(activity?.getColor(android.R.attr.textColorPrimary) ?: Color.GRAY)
+            trackButton.setTextColor(Color.GRAY)
         }
     }
 

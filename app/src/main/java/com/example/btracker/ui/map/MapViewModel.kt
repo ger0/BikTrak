@@ -49,7 +49,7 @@ class MapViewModel : ViewModel() {
             val calcDuration = duration / 1000
             track = TrackData(
                 date = LocalDate.now(),
-                description = username,
+                username = username,
                 duration = calcDuration,
                 distance = distance.value!!,
                 speed = if (calcDuration > 0f) (distance.value!! / calcDuration).toFloat() else 0f

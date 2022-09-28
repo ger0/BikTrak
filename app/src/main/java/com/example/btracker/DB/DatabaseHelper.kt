@@ -15,13 +15,13 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,
 ) {
     companion object {
         private const val DATABASE_VER    = 2
-        private const val DATABASE_NAME   = "TRACKDATA.db"
+        private const val DATABASE_NAME   = "HISTORYDATABASE.db"
 
         // Track Table
         private const val TRACK_TABLE     = "Track"
         private const val TRACK_ID        = "Id"
         private const val TRACK_DATE      = "Date"
-        private const val TRACK_DESC      = "Description"
+        private const val TRACK_USER      = "Username"
         private const val TRACK_DUR       = "Duration"
         private const val TRACK_DIST      = "Distance"
         private const val TRACK_SPEED     = "Speed"
@@ -37,7 +37,7 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,
     override fun onCreate(db: SQLiteDatabase) {
         val CREATE_TRACK =
             ("CREATE TABLE $TRACK_TABLE ($TRACK_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "$TRACK_DATE DATE, $TRACK_DESC TEXT, $TRACK_DUR UNSIGNED BIG INT," +
+                    "$TRACK_DATE DATE, $TRACK_USER TEXT, $TRACK_DUR UNSIGNED BIG INT," +
                     "$TRACK_DIST UNSIGNED BIG INT, $TRACK_SPEED FLOAT)")
         val CREATE_IMAGE =
             ("CREATE TABLE $IMAGE_TABLE ($IMAGE_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -49,6 +49,7 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db!!.execSQL("DROP TABLE IF EXISTS $TRACK_TABLE")
+        db!!.execSQL("DROP TABLE IF EXISTS $IMAGE_TABLE")
         onCreate(db)
     }
 
@@ -64,7 +65,7 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,
                     val track = TrackData(
                         id = cursor.getInt(cursor.getColumnIndex(TRACK_ID)),
                         date = LocalDate.parse(cursor.getString(cursor.getColumnIndex(TRACK_DATE))),
-                        description = cursor.getString(cursor.getColumnIndex(TRACK_DESC)),
+                        username = cursor.getString(cursor.getColumnIndex(TRACK_USER)),
                         duration = cursor.getLong(cursor.getColumnIndex(TRACK_DUR)),
                         distance = cursor.getLong(cursor.getColumnIndex(TRACK_DIST)),
                         speed = cursor.getFloat(cursor.getColumnIndex(TRACK_SPEED))
@@ -105,12 +106,13 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,
         val values  = ContentValues()
 
         values.put(TRACK_DATE, track.date.toString())
-        values.put(TRACK_DESC, track.description)
+        values.put(TRACK_USER, track.username)
         values.put(TRACK_DIST, track.distance)
         values.put(TRACK_DUR, track.duration)
         values.put(TRACK_SPEED, track.speed)
 
-        val id = db.insert(TRACK_TABLE, null, values)
+        //val id = db.insert(TRACK_TABLE, null, values)
+        val id = db.insertOrThrow(TRACK_TABLE, null, values)
         db.close()
 
         track.id = id.toInt()

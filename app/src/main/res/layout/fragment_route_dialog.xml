@@ -6,58 +6,183 @@
     android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/scrollViewInfo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/routeImage"
+                android:id="@+id/dialogRouteImage"
                 android:layout_width="match_parent"
                 android:layout_height="256dp"
+                android:layout_margin="16dp"
                 app:srcCompat="@drawable/route1"
                 tools:ignore="ImageContrastCheck" />
 
-            <TextView
-                android:id="@+id/routeDate"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:text="TextView"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/routeDistance"
+                <TextView
+                    android:id="@+id/dialogUsernameConst"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="3"
+                    android:gravity="right|center_vertical"
+                    android:text="@string/route_dialog_username"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/dialogRouteUsername"
+                    android:layout_width="256dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Username"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dialogDateConst"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="3"
+                    android:gravity="right|center_vertical"
+                    android:text="@string/route_dialog_date"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/dialogRouteDate"
+                    android:layout_width="256dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:text="Date"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dialogDistConst"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="3"
+                    android:gravity="right|center_vertical"
+                    android:text="@string/route_dialog_distance"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/dialogRouteDistance"
+                    android:layout_width="256dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:text="Distance"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dialogDurCons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="3"
+                    android:gravity="right|center_vertical"
+                    android:text="@string/route_dialog_duration"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/dialogRouteDuration"
+                    android:layout_width="256dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:text="Duration"
+                    android:textAllCaps="false"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textDirection="locale"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dialogSpeedConst"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="3"
+                    android:gravity="right|center_vertical"
+                    android:text="@string/route_dialog_average_speed"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/dialogRouteAvgSpeed"
+                    android:layout_width="256dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Speed"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionButton"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="3dp"
-                android:gravity="center"
-                android:text="TextView"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_margin="16dp"
+                android:baselineAlignBottom="false"
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="?attr/actionModeShareDrawable" />
 
-            <TextView
-                android:id="@+id/routeDuration"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="3dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="text"
-                android:textAlignment="textEnd"
-                android:textAllCaps="false"
-                android:textDirection="locale"
-                android:textStyle="italic" />
         </LinearLayout>
     </ScrollView>
 

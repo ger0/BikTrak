@@ -3,8 +3,6 @@ package com.example.btracker.ui.routes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.btracker.R
 import com.example.btracker.databinding.RouteItemBinding
@@ -15,7 +13,6 @@ class RouteAdapter(val onClickFunc: (route: Route) -> Unit): RecyclerView.Adapte
 
     class RouteHolder(item: View): RecyclerView.ViewHolder(item), View.OnClickListener {
         val binding = RouteItemBinding.bind(item)
-        lateinit var route: Route
         fun bind(route: Route) = with(binding){
             //routeImage.setImageResource(route.imageId)
             routeImage.setImageBitmap(route.bitmap)

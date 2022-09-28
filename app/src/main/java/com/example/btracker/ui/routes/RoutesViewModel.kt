@@ -15,4 +15,6 @@ class RoutesViewModel : ViewModel() {
 
     //val trackList = MutableLiveData<List<TrackData>>()
     //val imageList = MutableLiveData<List<ImageData>>()
+
+    var route: Route? = null
 }

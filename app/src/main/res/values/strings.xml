@@ -32,6 +32,13 @@
     <string name="routes">Trasy</string>
     <string name="settings">Ustawienia</string>
     <string name="map">Mapa</string>
+
+    <string name="route_dialog_username">Nazwa użytkownika: </string>
+    <string name="route_dialog_date">Data przejazdu: </string>
+    <string name="route_dialog_duration">Czas trwania: </string>
+    <string name="route_dialog_distance">Dystans: </string>
+    <string name="route_dialog_average_speed">Średnia prędkość: </string>
+
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
