@@ -30,6 +30,8 @@ class MapFrag : Fragment(), SensorEventListener {
     private var bearing    : Float          = 0f
 
     private var tiltSensor : Sensor? = null
+    private var lightSensor: Sensor? = null
+
     private var optTilted   = true
     private lateinit var map: GoogleMap
 
@@ -39,6 +41,26 @@ class MapFrag : Fragment(), SensorEventListener {
 
     private var cameraZoom = 14f
     private var cameraTilt = 0f
+
+    private var isNightMode = false
+
+    private fun changeStyle(style: String) {
+        val resId = if(style == "night") R.raw.map_style_night else R.raw.map_style_day
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            val success = map.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        requireActivity(), resId));
+            if (success && style == "night") {
+                isNightMode = true
+            } else if (success && style != "night") {
+                isNightMode = false
+            }
+        } catch (e: Exception) {
+            println("Can't find style. Error: ${e.message}")
+        }
+    }
 
     // callback
     @SuppressLint("MissingPermission")
@@ -141,6 +163,7 @@ class MapFrag : Fragment(), SensorEventListener {
 
         sensorManager = activity?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         tiltSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
+        lightSensor= sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
         isTracking = viewModel.isTracking.value!!
     }
 
@@ -148,6 +171,14 @@ class MapFrag : Fragment(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor?.type == Sensor.TYPE_ROTATION_VECTOR) {
             cameraTilt = max(min(event.values[1] * 180f, 90f), 0f)
+        }
+        if (event.sensor?.type == Sensor.TYPE_LIGHT) {
+            val light = event.values[0]
+            if (light < 5f && !isNightMode) {
+                changeStyle("night")
+            } else if (light >= 5f && isNightMode) {
+                changeStyle("day")
+            }
         }
     }
 
@@ -158,6 +189,7 @@ class MapFrag : Fragment(), SensorEventListener {
         super.onStart()
         // 0.5 sec sampling
         sensorManager.registerListener(this, tiltSensor, 500000)
+        sensorManager.registerListener(this, lightSensor, 500000)
         clearTrack()
     }
 

@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // assign username
         if (intent.extras?.containsKey("username") == true) {
             username = intent.getStringExtra("username").toString()

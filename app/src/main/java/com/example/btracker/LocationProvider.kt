@@ -59,6 +59,7 @@ class LocationProvider(
     fun clearData() {
         locations.clear()
         distance = 0
+        liveDistance.value = 0
     }
 
     private val locationCallback = object : LocationCallback() {
