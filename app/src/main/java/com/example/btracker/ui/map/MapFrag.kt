@@ -2,6 +2,7 @@ package com.example.btracker.ui.map
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -12,6 +13,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorLong
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import com.example.btracker.R
@@ -142,6 +144,8 @@ class MapFrag : Fragment(), SensorEventListener {
         val polylineOptions = PolylineOptions()
         clearTrack()
         val points = polylineOptions.points
+        if (isNightMode) polylineOptions.color(Color.WHITE)
+        else polylineOptions.color(Color.BLACK)
         points.addAll(path)
 
         map.addPolyline(polylineOptions)

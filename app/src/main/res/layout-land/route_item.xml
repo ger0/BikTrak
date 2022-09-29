@@ -23,33 +23,34 @@
 
             <ImageView
                 android:id="@+id/routeImage"
-                android:layout_width="81dp"
-                android:layout_height="81dp"
+                android:layout_width="91dp"
+                android:layout_height="91dp"
                 app:srcCompat="@drawable/route1"
                 tools:ignore="ImageContrastCheck" />
 
             <TextView
                 android:id="@+id/routeDate"
-                android:layout_width="wrap_content"
+                android:layout_width="196dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:text="TextView"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textSize="26dp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/routeDistance"
-                android:layout_width="wrap_content"
+                android:layout_width="196dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="3dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:text="TextView"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp" />
+                android:textColor="@color/black"
+                android:textSize="26dp" />
 
             <TextView
                 android:id="@+id/routeDuration"
@@ -58,12 +59,14 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="3dp"
                 android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:gravity="right"
                 android:text="text"
                 android:textAlignment="textEnd"
                 android:textAllCaps="false"
                 android:textDirection="locale"
+                android:textSize="24dp"
                 android:textStyle="italic" />
 
         </LinearLayout>
