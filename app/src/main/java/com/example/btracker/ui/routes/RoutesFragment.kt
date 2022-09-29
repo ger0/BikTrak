@@ -1,6 +1,5 @@
 package com.example.btracker.ui.routes
 
-import android.app.AlertDialog
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,14 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.btracker.DB.DatabaseHelper
 import com.example.btracker.R
 import com.example.btracker.databinding.FragmentRoutesBinding
-import com.example.btracker.ui.map.MapViewModel
 import java.time.format.DateTimeFormatter
 
 class RoutesFragment : Fragment() {

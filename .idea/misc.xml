@@ -4,18 +4,27 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.40520833333333334" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.283" />
+        <entry key="app/src/main/res/drawable/fields.xml" value="0.283" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.283" />
+        <entry key="app/src/main/res/drawable/side_nav_bar.xml" value="0.283" />
         <entry key="app/src/main/res/layout-land/activity_login.xml" value="0.265625" />
         <entry key="app/src/main/res/layout-land/app_bar_main.xml" value="0.33783783783783783" />
         <entry key="app/src/main/res/layout-land/fragment_map.xml" value="0.5" />
         <entry key="app/src/main/res/layout-small/app_bar_main.xml" value="1.3392857142857142" />
         <entry key="app/src/main/res/layout-small/fragment_map.xml" value="0.16071428571428573" />
+        <entry key="app/src/main/res/layout-small/fragment_routes.xml" value="1.9107142857142858" />
+        <entry key="app/src/main/res/layout-small/nav_header_main.xml" value="1.9107142857142858" />
         <entry key="app/src/main/res/layout-small/route_item.xml" value="2.5821428571428573" />
         <entry key="app/src/main/res/layout-w1240dp/activity_login.xml" value="0.361328125" />
         <entry key="app/src/main/res/layout-w1240dp/app_bar_main.xml" value="0.25510204081632654" />
         <entry key="app/src/main/res/layout-w1240dp/fragment_map.xml" value="0.1" />
+        <entry key="app/src/main/res/layout-w1240dp/fragment_routes.xml" value="0.33125" />
+        <entry key="app/src/main/res/layout-w1240dp/nav_header_main.xml" value="0.33125" />
         <entry key="app/src/main/res/layout-w1240dp/route_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout-w936dp/app_bar_main.xml" value="0.146484375" />
         <entry key="app/src/main/res/layout-w936dp/fragment_map.xml" value="0.1" />
+        <entry key="app/src/main/res/layout-w936dp/nav_header_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout-w936dp/route_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3765625" />
@@ -27,10 +36,13 @@
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.2875" />
         <entry key="app/src/main/res/layout/fragment_route_dialog.xml" value="0.5024322446143155" />
         <entry key="app/src/main/res/layout/fragment_routes.xml" value="0.3765625" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.2786458333333333" />
         <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.3765625" />
         <entry key="app/src/main/res/layout/route_item.xml" value="0.5" />
         <entry key="app/src/main/res/menu-large/activity_main_drawer.xml" value="0.25" />
         <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.25" />
+        <entry key="app/src/main/res/xml/filepaths.xml" value="0.14635416666666667" />
+        <entry key="app/src/main/res/xml/provider_paths.xml" value="0.1484375" />
       </map>
     </option>
   </component>

@@ -1,9 +1,13 @@
 package com.example.btracker
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
 import android.hardware.SensorManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import com.google.android.material.navigation.NavigationView
@@ -14,11 +18,16 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import com.example.btracker.DB.DatabaseHelper
 import com.example.btracker.DB.ImageData
 import com.example.btracker.databinding.ActivityMainBinding
 import com.example.btracker.ui.map.MapViewModel
 import com.example.btracker.ui.routes.RoutesViewModel
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private var username: String = ""
@@ -52,7 +61,8 @@ class MainActivity : AppCompatActivity() {
         // permissions
         sensorManager       = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         locationProvider    = LocationProvider(this, mapViewModel)
-        permissionManager   = PermissionsManager(this, locationProvider)
+        permissionManager   = PermissionsManager(this)
+        permissionManager.setLocationProvider(locationProvider)
         permissionManager.requestUserLocation()
 
         setSupportActionBar(binding.appBarMain.toolbar)
@@ -136,5 +146,30 @@ class MainActivity : AppCompatActivity() {
         }
         mapViewModel.resetTrackData()
         locationProvider.clearData()
+    }
+    fun sendTrackInfo(bitmap: Bitmap, text: String) {
+        this.permissionManager.requestWriteRead()
+        val file = File(Environment.getExternalStorageDirectory().toString() +
+                "/Android/data/" + packageName + "/cache/" + UUID.randomUUID().toString() + ".jpg");
+
+        val uri: Uri
+
+        val bos = ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        try {
+            if (!file.exists())  file.createNewFile();
+            val fos = FileOutputStream(file);
+            fos.write(bos.toByteArray());
+            uri = FileProvider.getUriForFile(applicationContext, BuildConfig.APPLICATION_ID + ".provider", file)
+
+            val intent = Intent(Intent.ACTION_SEND);
+            intent.type = "image/jpeg"
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(Intent.EXTRA_TEXT, text)
+            intent.putExtra(Intent.EXTRA_STREAM, uri)
+            startActivity(Intent.createChooser(intent, "SHARE"))
+        } catch (exception: Exception) {
+            println(exception.message)
+        }
     }
 }

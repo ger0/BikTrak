@@ -8,8 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import com.example.btracker.MainActivity
 import com.example.btracker.R
-import java.lang.IllegalStateException
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class RouteDialogFragment : DialogFragment() {
     private val viewModel: RoutesViewModel by activityViewModels()
@@ -21,6 +22,12 @@ class RouteDialogFragment : DialogFragment() {
         view?.findViewById<TextView>(R.id.dialogRouteDuration)?.text = viewModel.route?.duration
         view?.findViewById<TextView>(R.id.dialogRouteUsername)?.text = viewModel.route?.username
         view?.findViewById<TextView>(R.id.dialogRouteAvgSpeed)?.text = viewModel.route?.averageSpeed
+
+        view?.findViewById<FloatingActionButton>(R.id.dialogShareButton)?.setOnClickListener {
+            val str = viewModel.route?.distance + "\n" +
+                    viewModel.route?.duration
+            (activity as MainActivity).sendTrackInfo(viewModel.route!!.bitmap, str)
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
